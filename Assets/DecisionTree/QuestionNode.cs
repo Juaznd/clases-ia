@@ -6,38 +6,55 @@ public class QuestionNode : Node
 {
     public QuestionType QuestionType;
     public Node trueNode, falseNode;
-    public override void Execute(Police npc)
+    public override void Execute(Boid _boid)
     {
         switch (QuestionType)
         {
             case QuestionType.Comida:
-                if (Vector3.Distance(npc.transform.position, npc.Thief.transform.position)<npc.distance)
+
+                Food food = GameManager.instance.availableFood;
+
+                if (food == null)
+                {                    
+                    falseNode?.Execute(_boid);
+                    return;
+                }
+                if (Vector3.Distance(_boid.transform.position, GameManager.instance.availableFood.transform.position)< _boid.visionRange)
                 {
-                    trueNode.Execute(npc);
+                    trueNode.Execute(_boid);
                 }
                 else
                 {
-                    falseNode.Execute(npc);
+                    falseNode.Execute(_boid);
                 }
-                    break;
+                break;
             case QuestionType.Cazador:
-                if (npc.Thief.bArmed)
+                if (Vector3.Distance(_boid.transform.position, GameManager.instance._hunter.transform.position) < _boid.visionRange)
                 {
-                    trueNode.Execute(npc);
+                    trueNode.Execute(_boid);
                 }
                 else
                 {
-                    falseNode.Execute(npc);
+                    falseNode.Execute(_boid);
                 }
                 break;
             case QuestionType.Boids:
-                if (npc.Thief.bRobbed)
+                int boidCount = 0;
+                foreach (SteeringAgent listedBoid in GameManager.instance.allagents)
                 {
-                    trueNode.Execute(npc);
+                    if (listedBoid == this) continue;
+
+                    if (Vector3.Distance(_boid.transform.position, listedBoid.transform.position) > _boid.visionRange) continue;
+
+                    boidCount++;
+                }
+                if (boidCount!=0)
+                {
+                    trueNode.Execute(_boid);
                 }
                 else
                 {
-                    falseNode.Execute(npc);
+                    falseNode.Execute(_boid);
                 }
                 break;
         }

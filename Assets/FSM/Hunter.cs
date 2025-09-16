@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEditor.PlayerSettings;
 
 public class Hunter : SteeringAgent
 {
@@ -41,8 +42,10 @@ public class Hunter : SteeringAgent
     void Update()
     {        
         fsm.Update();
-        //Consume energia si detectata que se movió
+
+        //Consume energia si detecta que se movió
         consumeEnergyByMoving();
+
         //Chequear si hay algún boid en el rango y tambien si ese boid se fue
         if (_currentPrey == null) _currentPrey = senseBoids(GameManager.instance.allagents);
         else
@@ -58,6 +61,7 @@ public class Hunter : SteeringAgent
                 fsm.ChangeState(PlayerState.Hunt);
             }
         }
+        //energia al maximo? patrullar, pero si está agotada entrar a idle
         if (energy == maxEnergy)
         {
             fsm.ChangeState(PlayerState.Patrol);
@@ -66,29 +70,29 @@ public class Hunter : SteeringAgent
         {
             fsm.ChangeState(PlayerState.Idle);
         }
+
+        //si estoy en idle no me puedo mover
         if (fsm.currentPS != PlayerState.Idle)
         {
             Move();
         }
+
         AdjustBounds();
     }
-    //Detecta si los boids están en rango de visión, si encuentra alguno lo devuelve para tenerlo como target 
+
+    //Detecta si los boids están en rango de visión, si encuentra alguno lo devuelve para tenerlo como target
     public SteeringAgent senseBoids(List<SteeringAgent> boids)
     {
-        SteeringAgent best = null;
-        float bestSqr = float.PositiveInfinity;
+        SteeringAgent _BoidFound = null; 
 
-        foreach (var b in boids)
+        foreach (SteeringAgent boid in boids)
         {
-            if (!b || b == this) continue;
-            float sqr = (b.transform.position - transform.position).sqrMagnitude;
-            if (sqr <= visionRange * visionRange && sqr < bestSqr)
-            {
-                bestSqr = sqr;
-                best = b;
-            }
-        }
-        return best;
+            if (Vector3.Distance(transform.position, boid.transform.position) < visionRange)
+            { //Debug.Log(boid.name + " esta dentro del rango del hunter");
+              _BoidFound = boid; 
+            } 
+        } 
+        return _BoidFound; 
     }
 
     //Detecta si el hunter se mueve, y si es así va consumiendo energia
@@ -113,7 +117,7 @@ public class Hunter : SteeringAgent
 
         }
     }
-
+    //Cuando entra a idle llama a este metodo para curarse
     public void regenEnergy()
     {
         Debug.Log("Entro a regen " + (energy < maxEnergy));
@@ -124,6 +128,7 @@ public class Hunter : SteeringAgent
         }
         else
         {
+            //Si se curó al maximo puede volver a patrullar
             fsm.ChangeState(PlayerState.Patrol);
             resting = false;
         }

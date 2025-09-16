@@ -5,12 +5,13 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] float _boundWidth,_boundHeight;
-    [SerializeField] Hunter _hunter;
+    [SerializeField] public float _boundWidth,_boundHeight;
+    [SerializeField] public Hunter _hunter;
     public List<Transform> patrolPoints;
     public static GameManager instance;
-    public Hunter hunter;
     public List<SteeringAgent> allagents = new List<SteeringAgent>();
+    public Food availableFood;
+    public Node decisionTree;
     private void Awake()
     {
         
@@ -32,7 +33,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        //Debug.Log("available food name "+availableFood.name);
     }
 
     public Vector3 AdjustToBounds(Vector3 pos)

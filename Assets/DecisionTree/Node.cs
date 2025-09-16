@@ -4,6 +4,6 @@ using UnityEngine;
 
 public abstract class Node : MonoBehaviour
 {
-    public abstract void Execute(Police npc);
+    public abstract void Execute(Boid _boid);
 
 }

@@ -11,6 +11,6 @@ public class Police : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        root.Execute(this);
+        //root/*.*/Execute(Boid boid);
     }
 }

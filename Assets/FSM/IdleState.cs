@@ -6,20 +6,20 @@ public class IdleState : State
 {
     public override void OnEnter()
     {
-        Debug.Log("Entro al idle");
+        //Debug.Log("Entro al idle");
         fsm.hunter.resting = true;
     }
 
     public override void OnExit()
     {
-        Debug.Log("Salgo del idle");
+        //Debug.Log("Salgo del idle");
     }
 
     public override void OnUpdate()
     {
         fsm.hunter.Seek(Vector3.zero,0);
         fsm.hunter.regenEnergy();
-        Debug.Log("Estoy en el idle");
+        //Debug.Log("Estoy en el idle");
     }
 
 }

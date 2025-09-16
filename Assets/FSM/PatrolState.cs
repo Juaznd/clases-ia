@@ -6,18 +6,18 @@ public class Patrolstate : State
 {
     public override void OnEnter()
     {
-        Debug.Log("Entro al patrol");
+        //Debug.Log("Entro al patrol");
     }
 
     public override void OnExit()
     {
-        Debug.Log("Salgo del Patrol");
+        //Debug.Log("Salgo del Patrol");
     }
 
     public override void OnUpdate()
     {
         patrol();
-        Debug.Log("Estoy en el Patrol");
+        //Debug.Log("Estoy en el Patrol");
     }
 
     public void patrol()
