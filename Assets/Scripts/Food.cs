@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Food : MonoBehaviour,IEdible
 {
+    //Si el boid come a Food, simplemente le avisamos al game manager para que limpie la referencia
     public void eaten()
     {
         if (GameManager.instance.availableFood == this)

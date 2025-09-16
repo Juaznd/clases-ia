@@ -5,6 +5,7 @@ using UnityEngine;
 public class ActionNode : Node
 {
     public ActionType actionType;
+    //Acá están las acciones que se realizan en caso de que el decision tree lo decida
     public override void Execute(Boid _boid)
     {
         switch (actionType) 

@@ -6,10 +6,12 @@ public class QuestionNode : Node
 {
     public QuestionType QuestionType;
     public Node trueNode, falseNode;
+    //Acá están las preguntas que se hace el decision tree
     public override void Execute(Boid _boid)
     {
         switch (QuestionType)
         {
+            //Hay comida cerca del boid?
             case QuestionType.Comida:
 
                 Food food = GameManager.instance.availableFood;
@@ -28,6 +30,7 @@ public class QuestionNode : Node
                     falseNode.Execute(_boid);
                 }
                 break;
+            //El cazador está cerca?
             case QuestionType.Cazador:
                 if (Vector3.Distance(_boid.transform.position, GameManager.instance._hunter.transform.position) < _boid.visionRange)
                 {
@@ -38,6 +41,7 @@ public class QuestionNode : Node
                     falseNode.Execute(_boid);
                 }
                 break;
+            //Hay otros boids cerca?
             case QuestionType.Boids:
                 int boidCount = 0;
                 foreach (SteeringAgent listedBoid in GameManager.instance.allagents)

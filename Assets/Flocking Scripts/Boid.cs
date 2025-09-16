@@ -22,7 +22,7 @@ public class Boid : SteeringAgent,IEdible
         GameManager.instance.allagents.Add(this);
     }
 
-    // Update is called once per frame
+    //En update el boid consulta cada frame al decision tree, utiliza Move() para poder moverse y consulta a AdjustBounds para evitar irse del mapa
     void Update()
     {
         decisionTree.Execute(this);
@@ -42,6 +42,7 @@ public class Boid : SteeringAgent,IEdible
         transform.position = GameManager.instance.AdjustToBounds(transform.position);
 
     }
+    //Cuando hay comida en rango, el boid usa este metodo para alcanzarlo y comerlo
     public void getFood(Food targetFood)
     {
         if (targetFood == null) return;
@@ -54,13 +55,13 @@ public class Boid : SteeringAgent,IEdible
             Debug.Log(gameObject.name+ "ejecutó eaten");
         }
     }
-
+    //Cuando hay un cazador en rango el boid intenta evadirlo con este metodo
     public void getAway(SteeringAgent hunter)
     {
         if (hunter == null) return;
         AddForce(Evade(hunter));
     }
-
+    //Wander significa merodear, lo utiliza el boid para moverse sin rumbo en caso de que no haya comida, ni cazador ni otros boids para hacer flocking
     public void wander()
     {
         float x = Random.Range(-1f, 1f);
@@ -70,7 +71,7 @@ public class Boid : SteeringAgent,IEdible
 
         _velocity = dir.normalized * _maxForce;
     }
-
+    //este metodo maneja lo que sucede cuando el cazador se come al boid. Spoiler, le avisa al game manager para que borre la referencia y cree uno nuevo, y elimina el objeto de la escena
     public void eaten()
     {
         if (this == null) return;

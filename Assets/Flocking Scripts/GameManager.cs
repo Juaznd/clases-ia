@@ -25,17 +25,6 @@ public class GameManager : MonoBehaviour
             Destroy(this);
         }
     }
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        //Debug.Log("available food name "+availableFood.name);
-    }
 
     public Vector3 AdjustToBounds(Vector3 pos)
     {
@@ -54,13 +43,14 @@ public class GameManager : MonoBehaviour
         Gizmos.color = Color.white;
         Gizmos.DrawWireCube(transform.position,new Vector3(_boundWidth, _boundHeight));
     }
-
+    //Cuando un boid es comido, limpiamos la referencia y creamos uno nuevo
     public void consumeBoid(SteeringAgent boid)
     {
         if(boid==null)return;
         allagents.Remove(boid);
         instantiateBoid();
     }
+    //el boid nuevo se instancia en el centro de la escena agregandolo a la lista de boids
     public void instantiateBoid()
     {
         SteeringAgent boid = null;

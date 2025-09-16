@@ -14,7 +14,7 @@ public class IdleState : State
     {
         //Debug.Log("Salgo del idle");
     }
-
+    //el cazador para de moverse y recarga energias hasta que esté full
     public override void OnUpdate()
     {
         fsm.hunter.Seek(Vector3.zero,0);

@@ -137,10 +137,12 @@ public class Hunter : SteeringAgent
         }
 
     }
+    //Este metodo lo agregué porque luego de comer un boid, el cazador quedaba en estado de hunt pero sin presa por un rato
     public void backToPatrol()
     {
         fsm.ChangeState(PlayerState.Patrol);
     }
+    //Lo mismo que los boids, para que no se vaya fuera del rectangulo de la camara
     public void AdjustBounds()
     {
         transform.position = GameManager.instance.AdjustToBounds(transform.position);
