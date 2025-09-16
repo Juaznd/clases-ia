@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     public List<SteeringAgent> allagents = new List<SteeringAgent>();
     public Food availableFood;
     public Node decisionTree;
+    public GameObject boidPrefab;
     private void Awake()
     {
         
@@ -52,5 +53,22 @@ public class GameManager : MonoBehaviour
     {
         Gizmos.color = Color.white;
         Gizmos.DrawWireCube(transform.position,new Vector3(_boundWidth, _boundHeight));
+    }
+
+    public void consumeBoid(SteeringAgent boid)
+    {
+        if(boid==null)return;
+        allagents.Remove(boid);
+        instantiateBoid();
+    }
+    public void instantiateBoid()
+    {
+        SteeringAgent boid = null;
+
+        GameObject boidGO = Instantiate(boidPrefab,new Vector3(0,0,0),Quaternion.identity);
+
+        boid= boidGO.GetComponent<SteeringAgent>();
+
+        allagents.Add(boid);
     }
 }

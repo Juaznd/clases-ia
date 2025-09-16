@@ -66,7 +66,8 @@ public class SteeringAgent : MonoBehaviour
         int boidCount = 0;
 
         foreach (SteeringAgent bo in boids) 
-        { 
+        {
+            if (bo == null) continue;
             if(Vector3.Distance(transform.position, bo.transform.position) > _radius)continue;
             desired += bo._velocity;
             boidCount++;
@@ -82,7 +83,7 @@ public class SteeringAgent : MonoBehaviour
 
         foreach (SteeringAgent bo in boids)
         {
-            if(bo==this) continue;
+            if(bo==this||bo==null) continue;
 
             Vector3 dist = bo.transform.position - transform.position;
 
@@ -105,7 +106,7 @@ public class SteeringAgent : MonoBehaviour
 
         foreach (SteeringAgent boid in boids)
         {
-            if (boid == this) continue;
+            if (boid == this||boid==null) continue;
 
             if(Vector3.Distance(transform.position,boid.transform.position)>_radius) continue;
 

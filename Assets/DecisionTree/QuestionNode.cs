@@ -42,7 +42,7 @@ public class QuestionNode : Node
                 int boidCount = 0;
                 foreach (SteeringAgent listedBoid in GameManager.instance.allagents)
                 {
-                    if (listedBoid == this) continue;
+                    if (listedBoid == this||listedBoid==null) continue;
 
                     if (Vector3.Distance(_boid.transform.position, listedBoid.transform.position) > _boid.visionRange) continue;
 

@@ -24,15 +24,20 @@ public class HuntState : State
     {
         if (fsm.hunter._currentPrey != null)
         {
-            //if(Vector3.Distance(fsm.hunter.transform.position, fsm.hunter._currentPrey.transform.position)< fsm.hunter.separationRadius)
-            //{
-            //    fsm.hunter.AddForce(fsm.hunter.Arrive(fsm.hunter._currentPrey.transform.position));
-            //}
-            //else
-            //{
+            if(Vector3.Distance(fsm.hunter.transform.position, fsm.hunter._currentPrey.transform.position)< fsm.hunter.separationRadius)
+            {
+                fsm.hunter.AddForce(fsm.hunter.Arrive(fsm.hunter._currentPrey.transform.position));
+            }
+            if (Vector3.Distance(fsm.hunter.transform.position, fsm.hunter._currentPrey.transform.position) <= 1f)
+            {
+                fsm.hunter.anim.SetTrigger("eatHunter");
+                fsm.hunter._currentPrey.GetComponent<Boid>().eaten();
+            }
+            else
+            {
+                fsm.hunter.AddForce(fsm.hunter.Persuit(fsm.hunter._currentPrey));
 
-            //}
-            fsm.hunter.AddForce(fsm.hunter.Persuit(fsm.hunter._currentPrey));
+            }
 
         }
     }

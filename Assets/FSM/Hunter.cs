@@ -18,6 +18,8 @@ public class Hunter : SteeringAgent
     public float regenPorSegundo = 0.6f;
     public TextMeshProUGUI stateText;
     public float separationRadius;
+    public Animator anim;
+        
     // Start is called before the first frame update
 
     public float visionRange
@@ -87,6 +89,7 @@ public class Hunter : SteeringAgent
 
         foreach (SteeringAgent boid in boids)
         {
+            if(boid==null) continue;
             if (Vector3.Distance(transform.position, boid.transform.position) < visionRange)
             { //Debug.Log(boid.name + " esta dentro del rango del hunter");
               _BoidFound = boid; 

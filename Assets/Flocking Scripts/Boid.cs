@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Boid : SteeringAgent
+public class Boid : SteeringAgent,IEdible
 {
     [SerializeField] float _alignmentWeight;
     [SerializeField] float _separationWeight;
@@ -16,6 +16,7 @@ public class Boid : SteeringAgent
     // Start is called before the first frame update
     void Start()
     {
+        anim.SetTrigger("summon");
         wander();
         decisionTree=GameManager.instance.decisionTree;
         GameManager.instance.allagents.Add(this);
@@ -44,6 +45,7 @@ public class Boid : SteeringAgent
     public void getFood(Food targetFood)
     {
         if (targetFood == null) return;
+        Flocking();
         AddForce(Arrive(targetFood.transform.position));
         if (Vector3.Distance(transform.position, targetFood.transform.position) < 1.2f)
         {
@@ -67,5 +69,12 @@ public class Boid : SteeringAgent
         Vector3 dir = new Vector3(x, y);
 
         _velocity = dir.normalized * _maxForce;
+    }
+
+    public void eaten()
+    {
+        if (this == null) return;
+        GameManager.instance.consumeBoid(this);
+        Destroy(gameObject);
     }
 }
