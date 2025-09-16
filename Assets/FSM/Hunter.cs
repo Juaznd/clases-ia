@@ -137,6 +137,10 @@ public class Hunter : SteeringAgent
         }
 
     }
+    public void backToPatrol()
+    {
+        fsm.ChangeState(PlayerState.Patrol);
+    }
     public void AdjustBounds()
     {
         transform.position = GameManager.instance.AdjustToBounds(transform.position);

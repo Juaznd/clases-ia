@@ -32,6 +32,7 @@ public class HuntState : State
             {
                 fsm.hunter.anim.SetTrigger("eatHunter");
                 fsm.hunter._currentPrey.GetComponent<Boid>().eaten();
+                fsm.hunter.backToPatrol();
             }
             else
             {
