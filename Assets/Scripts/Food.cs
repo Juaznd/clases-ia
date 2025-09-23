@@ -11,7 +11,7 @@ public class Food : MonoBehaviour,IEdible
         if (GameManager.instance.availableFood == this)
         {
             GameManager.instance.availableFood = null;
-            Debug.Log(gameObject.name+" ejecuto eaten");
+            //Debug.Log(gameObject.name+" ejecuto eaten");
         }
         Destroy(gameObject);
     }

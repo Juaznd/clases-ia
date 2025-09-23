@@ -10,7 +10,8 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        fsm = new FiniteStateMachine();
+        Hunter hunter = new Hunter();
+        fsm = new FiniteStateMachine(hunter);
         fsm.AddState(PlayerState.Idle,new IdleState());
         fsm.AddState(PlayerState.Walk,new WalkState());
         fsm.ChangeState(PlayerState.Idle);

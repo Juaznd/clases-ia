@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using static UnityEditor.PlayerSettings;
 
+//Tanto Hunter como Boid heredan de SteeringAgent, lo que les permite poder moverse con seek, persuit, evade, etc.
 public class Hunter : SteeringAgent
 {
     FiniteStateMachine fsm;
@@ -29,12 +30,14 @@ public class Hunter : SteeringAgent
 
     void Start()
     {
+        //SeparationRadius se usa para ver si el Boid está al alcance de la mano
         separationRadius=_separationRadius;
-        fsm = new FiniteStateMachine();
-        fsm.hunter = this;
+        //Inicializamos state machine
+        fsm = new FiniteStateMachine(this);
         fsm.AddState(PlayerState.Idle,new IdleState());
         fsm.AddState(PlayerState.Patrol,new Patrolstate());
         fsm.AddState(PlayerState.Hunt,new HuntState());
+        //Arranca el idle, y este mismo delegará luego a patrol
         fsm.ChangeState(PlayerState.Idle);
         lastPosition=transform.position;
         energy = maxEnergy;
@@ -47,31 +50,6 @@ public class Hunter : SteeringAgent
 
         //Consume energia si detecta que se movió
         consumeEnergyByMoving();
-
-        //Chequear si hay algún boid en el rango y tambien si ese boid se fue
-        if (_currentPrey == null) _currentPrey = senseBoids(GameManager.instance.allagents);
-        else
-        {
-            if (Vector3.Distance(transform.position, _currentPrey.transform.position) > visionRange)
-            {
-                //Debug.Log(_currentAgent.name+" escapó");
-                _currentPrey = null;
-                fsm.ChangeState(PlayerState.Patrol);
-            }
-            else
-            {
-                fsm.ChangeState(PlayerState.Hunt);
-            }
-        }
-        //energia al maximo? patrullar, pero si está agotada entrar a idle
-        if (energy == maxEnergy)
-        {
-            fsm.ChangeState(PlayerState.Patrol);
-        }
-        else if (energy == 0 || resting)
-        {
-            fsm.ChangeState(PlayerState.Idle);
-        }
 
         //si estoy en idle no me puedo mover
         if (fsm.currentPS != PlayerState.Idle)
@@ -90,10 +68,7 @@ public class Hunter : SteeringAgent
         foreach (SteeringAgent boid in boids)
         {
             if(boid==null) continue;
-            if (Vector3.Distance(transform.position, boid.transform.position) < visionRange)
-            { //Debug.Log(boid.name + " esta dentro del rango del hunter");
-              _BoidFound = boid; 
-            } 
+            if (Vector3.Distance(transform.position, boid.transform.position) < visionRange)_BoidFound = boid;            
         } 
         return _BoidFound; 
     }
@@ -101,17 +76,17 @@ public class Hunter : SteeringAgent
     //Detecta si el hunter se mueve, y si es así va consumiendo energia
     public void consumeEnergyByMoving()
     {
-        if (Vector3.Distance(transform.position, lastPosition) > 0.001f)
-        {
-            
+        if (Vector3.Distance(transform.position, lastPosition) > 0.001f)        
+        {            
             energy -= 0.1f;
             if(energy < 0) energy = 0; 
             updateEnergybar();
         }
+        //guardamos la ultima posición, si no no sabemos si se movió
         lastPosition = transform.position;
-
     }
-    //Actualiza la barrita de la interfaz
+
+    //Actualiza la barrita de stamina
     public void updateEnergybar()
     {
         if (energy >= 0)
@@ -120,28 +95,7 @@ public class Hunter : SteeringAgent
 
         }
     }
-    //Cuando entra a idle llama a este metodo para curarse
-    public void regenEnergy()
-    {
-        Debug.Log("Entro a regen " + (energy < maxEnergy));
-        if (energy < maxEnergy) 
-        {
-            energy += regenPorSegundo * Time.deltaTime;
-            updateEnergybar();
-        }
-        else
-        {
-            //Si se curó al maximo puede volver a patrullar
-            fsm.ChangeState(PlayerState.Patrol);
-            resting = false;
-        }
 
-    }
-    //Este metodo lo agregué porque luego de comer un boid, el cazador quedaba en estado de hunt pero sin presa por un rato
-    public void backToPatrol()
-    {
-        fsm.ChangeState(PlayerState.Patrol);
-    }
     //Lo mismo que los boids, para que no se vaya fuera del rectangulo de la camara
     public void AdjustBounds()
     {

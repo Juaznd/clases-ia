@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//Tanto Hunter como Boid heredan de SteeringAgent, lo que les permite poder moverse con seek, persuit, evade, etc.
+//IEdible es la interfaz usada por objetos que pueden ser comidos, como food y boid.
 public class Boid : SteeringAgent,IEdible
 {
     [SerializeField] float _alignmentWeight;
@@ -26,10 +28,10 @@ public class Boid : SteeringAgent,IEdible
     void Update()
     {
         decisionTree.Execute(this);
-        //Flocking();
         Move();
         AdjustBounds();
     }
+    //Flocking es usado para que los boids se agrupen entre sí y alineen su velocity en conjunto
     public void Flocking()
     {
         List<SteeringAgent> agentlist = GameManager.instance.allagents;
@@ -37,6 +39,7 @@ public class Boid : SteeringAgent,IEdible
         AddForce(Separation(agentlist)*_separationWeight);
         AddForce(Cohesion(agentlist)*_cohesionWeight);
     }
+    //Esto impide que se salgan de pantalla
     public void AdjustBounds()
     {
         transform.position = GameManager.instance.AdjustToBounds(transform.position);
@@ -52,15 +55,16 @@ public class Boid : SteeringAgent,IEdible
         {
             targetFood.GetComponent<Food>().eaten();
             anim.SetTrigger("eat");
-            Debug.Log(gameObject.name+ "ejecutó eaten");
         }
     }
+
     //Cuando hay un cazador en rango el boid intenta evadirlo con este metodo
     public void getAway(SteeringAgent hunter)
     {
         if (hunter == null) return;
         AddForce(Evade(hunter));
     }
+
     //Wander significa merodear, lo utiliza el boid para moverse sin rumbo en caso de que no haya comida, ni cazador ni otros boids para hacer flocking
     public void wander()
     {
@@ -71,6 +75,7 @@ public class Boid : SteeringAgent,IEdible
 
         _velocity = dir.normalized * _maxForce;
     }
+
     //este metodo maneja lo que sucede cuando el cazador se come al boid. Spoiler, le avisa al game manager para que borre la referencia y cree uno nuevo, y elimina el objeto de la escena
     public void eaten()
     {
