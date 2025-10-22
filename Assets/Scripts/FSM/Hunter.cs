@@ -48,16 +48,20 @@ public class Hunter : SteeringAgent
     {        
         fsm.Update();
 
-        //Consume energia si detecta que se movió
-        consumeEnergyByMoving();
+
 
         //si estoy en idle no me puedo mover
         if (fsm.currentPS != PlayerState.Idle)
         {
             Move();
         }
+        else
+        {
+            //Consume energia si detecta que se movió
+            consumeEnergyByMoving();
+        }
 
-        AdjustBounds();
+            AdjustBounds();
     }
 
     //Detecta si los boids están en rango de visión, si encuentra alguno lo devuelve para tenerlo como target
@@ -68,7 +72,11 @@ public class Hunter : SteeringAgent
         foreach (SteeringAgent boid in boids)
         {
             if(boid==null) continue;
-            if (Vector3.Distance(transform.position, boid.transform.position) < visionRange)_BoidFound = boid;            
+            if (Vector3.Distance(transform.position, boid.transform.position) < visionRange)
+            {
+                _BoidFound = boid;
+                break;
+            }
         } 
         return _BoidFound; 
     }
@@ -78,7 +86,7 @@ public class Hunter : SteeringAgent
     {
         if (Vector3.Distance(transform.position, lastPosition) > 0.001f)        
         {            
-            energy -= 0.1f;
+            energy -= 0.1f*Time.deltaTime;
             if(energy < 0) energy = 0; 
             updateEnergybar();
         }

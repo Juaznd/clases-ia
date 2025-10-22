@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 //Tanto Hunter como Boid heredan de SteeringAgent, lo que les permite poder moverse con seek, persuit, evade, etc.
@@ -10,6 +11,8 @@ public class Boid : SteeringAgent,IEdible
     [SerializeField] float _separationWeight;
     [SerializeField] float _cohesionWeight;
     [SerializeField] Node decisionTree;
+    [SerializeField] TextMeshProUGUI actionText;
+    public string nodeState = "";
     public Animator anim;
     public float visionRange
     {
@@ -27,6 +30,11 @@ public class Boid : SteeringAgent,IEdible
     //En update el boid consulta cada frame al decision tree, utiliza Move() para poder moverse y consulta a AdjustBounds para evitar irse del mapa
     void Update()
     {
+        if (actionText != null) 
+        {
+            actionText.text = nodeState;
+
+        }
         decisionTree.Execute(this);
         Move();
         AdjustBounds();
@@ -39,6 +47,11 @@ public class Boid : SteeringAgent,IEdible
         AddForce(Separation(agentlist)*_separationWeight);
         AddForce(Cohesion(agentlist)*_cohesionWeight);
     }
+    public void Separate()
+    {
+        List<SteeringAgent> agentlist = GameManager.instance.allagents;
+        AddForce(Separation(agentlist) * _separationWeight);
+    }
     //Esto impide que se salgan de pantalla
     public void AdjustBounds()
     {
@@ -49,7 +62,8 @@ public class Boid : SteeringAgent,IEdible
     public void getFood(Food targetFood)
     {
         if (targetFood == null) return;
-        Flocking();
+        //Flocking();
+        //Separate();
         AddForce(Arrive(targetFood.transform.position));
         if (Vector3.Distance(transform.position, targetFood.transform.position) < 1.2f)
         {

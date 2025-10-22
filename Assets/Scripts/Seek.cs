@@ -28,9 +28,9 @@ public class SteeringAgent : MonoBehaviour
     }
     public Vector3 Evade(SteeringAgent AgentPosition)
     {
-        Vector3 evadeVector = Persuit(AgentPosition)*-1;
+        Vector3 evadeVector = Persuit(AgentPosition);
 
-        return evadeVector;
+        return -evadeVector;
     }
     public Vector3 ObstacleAvoidance()
     {

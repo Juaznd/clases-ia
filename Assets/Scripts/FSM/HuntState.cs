@@ -39,12 +39,12 @@ public class HuntState : State
                 return;
             }
 
-            //Revisamos si se encuentra en el rango del separationRadius, este radio lo usamos para saber si esta muy cerca. Si es así, aplicamos arrive para que el hunter no pase de largo
-            if (Vector3.Distance(fsm.hunter.transform.position, fsm.hunter._currentPrey.transform.position) < fsm.hunter.separationRadius)
-            {
-                fsm.hunter.AddForce(fsm.hunter.Arrive(fsm.hunter._currentPrey.transform.position));
-                return;
-            }
+            ////Revisamos si se encuentra en el rango del separationRadius, este radio lo usamos para saber si esta muy cerca. Si es así, aplicamos arrive para que el hunter no pase de largo
+            //if (Vector3.Distance(fsm.hunter.transform.position, fsm.hunter._currentPrey.transform.position) < fsm.hunter.separationRadius)
+            //{
+            //    fsm.hunter.AddForce(fsm.hunter.Arrive(fsm.hunter._currentPrey.transform.position));
+            //    return;
+            //}
 
             //Si la presa está en rango de visión nos acercamos con persuit
             if (Vector3.Distance(fsm.hunter.transform.position, fsm.hunter._currentPrey.transform.position) < fsm.hunter.visionRange)

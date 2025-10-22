@@ -11,15 +11,20 @@ public class ActionNode : Node
         switch (actionType) 
         { 
            case ActionType.Comer:
+                _boid.nodeState = "comer";
+                
                 _boid.getFood(GameManager.instance.availableFood);
                 break;
             case ActionType.Evadir:
+                _boid.nodeState = "evadir";
                 _boid.getAway(GameManager.instance._hunter);
                 break;
             case ActionType.Flock:
+                _boid.nodeState = "flock";
                 _boid.Flocking();
                 break;
             case ActionType.Deambular:
+                _boid.nodeState = "wander";
                 _boid.wander();
                 break;
             default:
